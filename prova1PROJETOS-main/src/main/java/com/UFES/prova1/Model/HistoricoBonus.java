@@ -2,86 +2,51 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.UFES.prova1.Model;
+package com.ufes.prova1.model;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author Administrador
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table
 public class HistoricoBonus {
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private BigInteger id;
+	@Column
     private String nome;
+	@Column
     private String tipoBonus;
-    private double valorBonus;
-    private int mes;
-    private int ano;
+	@Column
+    private BigDecimal valorBonus;
+	@Column
+    private BigInteger mes;
+	@Column
+    private BigInteger ano;
 
-    public HistoricoBonus( String nome, String tipoBonus, double valorBonus, int mes, int ano) {
-        this.id = id;
+    public HistoricoBonus( String nome, String tipoBonus, BigDecimal valorBonus, BigInteger mes, BigInteger ano) {
         this.nome = nome;
         this.tipoBonus = tipoBonus;
         this.valorBonus = valorBonus;
         this.mes = mes;
         this.ano = ano;
     }
-
-    public int getMes() {
-        return mes;
-    }
-
-    public void setMes(int mes) {
-        this.mes = mes;
-    }
-
-    public int getAno() {
-        return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
-    }
-
-   
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getTipoBonus() {
-        return tipoBonus;
-    }
-
-    public void setTipoBonus(String tipoBonus) {
-        this.tipoBonus = tipoBonus;
-    }
-
-    public double getValorBonus() {
-        return valorBonus;
-    }
-
-    public void setValorBonus(double valorBonus) {
-        this.valorBonus = valorBonus;
-    }
-
-    @Override
-    public String toString() {
-        return "HistoricoBonus{" + "id=" + id + ", nome=" + nome + ", tipoBonus=" + tipoBonus + ", valorBonus=" + valorBonus + ", mes=" + mes + ", ano=" + ano + '}';
-    }
-
-   
-
-   
-    
 }

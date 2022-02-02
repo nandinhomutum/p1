@@ -2,73 +2,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.UFES.prova1.Model;
+package com.ufes.prova1.model;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author Administrador
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table
 public class HistoricoSalario {
-    private int id;
-    private String nome;
-    private double bonus;
-    private double salarioFinal;
-    private int mes;
-    private int ano;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private BigInteger id;
+	
+	@OneToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "idFuncionario", foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT))
+    private Funcionario funcionario;
+	
+	@Column
+    private BigDecimal bonus;
+	
+	@Column			
+    private BigDecimal salarioFinal;
+	
+	@Column
+    private BigInteger mes;
+	
+	@Column
+    private BigInteger ano;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-   
-
-    public double getBonus() {
-        return bonus;
-    }
-
-    public void setBonus(double bonus) {
-        this.bonus = bonus;
-    }
-
-    public int getMes() {
-        return mes;
-    }
-
-    public void setMes(int mes) {
-        this.mes = mes;
-    }
-
-    public int getAno() {
-        return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
-    }
-
-    
-    public double getSalarioFinal() {
-        return salarioFinal;
-    }
-
-    public void setSalarioFinal(double salarioFinal) {
-        this.salarioFinal = salarioFinal;
-    }
-
-    public HistoricoSalario(String nome, double bonus, double salarioFinal, int mes, int ano) {
-        this.nome = nome;
+    public HistoricoSalario(Funcionario funcionario, BigDecimal bonus, BigDecimal salarioFinal, BigInteger mes, BigInteger ano) {
+        this.funcionario = funcionario;
         this.bonus = bonus;
         this.salarioFinal = salarioFinal;
         this.mes = mes;

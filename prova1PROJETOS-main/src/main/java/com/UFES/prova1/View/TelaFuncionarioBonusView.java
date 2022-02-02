@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.View;
+package com.ufes.prova1.view;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,6 +21,29 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
      * Creates new form TelaFuncionarioBonusView
      */
     public TelaFuncionarioBonusView() {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionarioBonusView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionarioBonusView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionarioBonusView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionarioBonusView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+              
         initComponents();
     }
 
@@ -38,7 +61,7 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         lblCargo = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        lblDataAdmissao = new javax.swing.JLabel();
+        lblMes = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblBonus = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -61,6 +84,9 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
         ckDistancia = new javax.swing.JCheckBox();
         jLabel13 = new javax.swing.JLabel();
         jckIdade = new javax.swing.JCheckBox();
+        lblAno = new javax.swing.JLabel();
+        jckbTempo = new javax.swing.JCheckBox();
+        jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,6 +144,17 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
 
         jckIdade.setText("Sim");
 
+        lblAno.setText(" ");
+
+        jckbTempo.setText("Sim");
+        jckbTempo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jckbTempoActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Bonus Tempo");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,8 +192,10 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                         .addComponent(jCBBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                     .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(lblDataAdmissao, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(188, 188, 188)
+                                                        .addComponent(lblMes, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(lblAno, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(66, 66, 66)
                                                         .addComponent(lblBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jLabel1)
@@ -184,7 +223,11 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel11)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jcbAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                        .addComponent(jcbAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(40, 40, 40)
+                                        .addComponent(jLabel14)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jckbTempo))))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5)
@@ -195,29 +238,32 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
                         .addComponent(ckFuncionarioMes)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel12)
-                        .addComponent(lbId, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblCargo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel3)
-                    .addComponent(lblDataAdmissao, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel12)
+                                .addComponent(lbId, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblCargo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel3)
+                            .addComponent(lblMes, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblBonus, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblAno))
                 .addGap(35, 35, 35)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,17 +281,19 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
                     .addComponent(ckDistancia)
                     .addComponent(jLabel13)
                     .addComponent(jckIdade))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(cbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(jcbAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jckbTempo)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFechar)
                     .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -258,6 +306,10 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
     private void cbMesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbMesItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_cbMesItemStateChanged
+
+    private void jckbTempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jckbTempoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jckbTempoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -329,11 +381,11 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
     }
 
     public JLabel getLblDataAdmissao() {
-        return lblDataAdmissao;
+        return lblMes;
     }
 
     public void setLblDataAdmissao(JLabel lblDataAdmissao) {
-        this.lblDataAdmissao = lblDataAdmissao;
+        this.lblMes = lblDataAdmissao;
     }
 
     public JLabel getLblNome() {
@@ -366,6 +418,32 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
 
     public void setJcbAno(JComboBox<String> jcbAno) {
         this.jcbAno = jcbAno;
+    }
+
+    public JLabel getLblAno() {
+        return lblAno;
+    }
+
+    public void setLblAno(JLabel lblAno) {
+        this.lblAno = lblAno;
+    }
+
+    public JLabel getLblMes() {
+        return lblMes;
+    }
+
+    public JCheckBox getJckbTempo() {
+        return jckbTempo;
+    }
+
+    public void setJckbTempo(JCheckBox jckbTempo) {
+        this.jckbTempo = jckbTempo;
+    }
+    
+    
+
+    public void setLblMes(JLabel lblMes) {
+        this.lblMes = lblMes;
     }
 
   
@@ -405,6 +483,7 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -415,10 +494,12 @@ public class TelaFuncionarioBonusView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JComboBox<String> jcbAno;
     private javax.swing.JCheckBox jckIdade;
+    private javax.swing.JCheckBox jckbTempo;
     private javax.swing.JLabel lbId;
+    private javax.swing.JLabel lblAno;
     private javax.swing.JLabel lblBonus;
     private javax.swing.JLabel lblCargo;
-    private javax.swing.JLabel lblDataAdmissao;
+    private javax.swing.JLabel lblMes;
     private javax.swing.JLabel lblNome;
     private javax.swing.JTextField txtFaltas;
     // End of variables declaration//GEN-END:variables

@@ -1,120 +1,68 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.UFES.prova1.Model;
+package com.ufes.prova1.model;
 
-import com.UFES.prova1.Business.CalcularBonus;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author nandi
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "funcionarios")
 public class Funcionario {
 
-    private int id;
-    private String nome;
-    private int idade;
-    private double salario;
-    private String cargo;
-    private String dataAdmissao;
-    private int faltas;
-    private int km;
-
-    public Funcionario(int id, String nome, int idade, double salario, String cargo, String dataAdmissao, int faltas, int km) {
-        this.id = id;
-        this.nome = nome;
-        this.idade = idade;
-        this.salario = salario;
-        this.cargo = cargo;
-        this.dataAdmissao = dataAdmissao;
-        this.faltas = faltas;
-        this.km = km;
-    }
-
-    public Funcionario(String nome, int idade, double salario, String cargo, String dataAdmissao, int faltas, int km) {
-        this.nome = nome;
-        this.idade = idade;
-        this.salario = salario;
-        this.cargo = cargo;
-        this.dataAdmissao = dataAdmissao;
-        this.faltas = faltas;
-        this.km = km;
-    }
-
-    public int getKm() {
-        return km;
-    }
-
-    public void setKm(int km) {
-        this.km = km;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private BigInteger id;
+	
+	@Column(nullable = false,name = "nome")
+    private String nome;	
+	
+	@Column(name = "idade")
+    private BigInteger idade;
     
-    public int getFaltas() {
-        return faltas;
-    }
-
-    public void setFaltas(int faltas) {
-        this.faltas = faltas;
-    }
+	@Column
+    private BigDecimal salario;
     
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public int getIdade() {
-        return idade;
-    }
-
-    public void setIdade(int idade) {
-        this.idade = idade;
-    }
-
-    public double getSalario() {
-        return salario;
-    }
-
-    public void setSalario(double salario) {
-        this.salario = salario;
-    }
-
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
-
-    public String getDataAdmissao() {
-        return dataAdmissao;
-    }
-
-    public void setDataAdmissao(String dataAdmissao) {
-        this.dataAdmissao = dataAdmissao;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Funcionario{" + "id=" + id + ", nome=" + nome + ", idade=" + idade + ", salario=" + salario + ", cargo=" + cargo + ", " + "dataAdmissao=" + dataAdmissao + '}';
-    }
+	@OneToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "idCargo", foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT))
+    private Cargo cargo;
+	
+	@Column
+	private BigInteger km;
+    
+//	@ManyToOne
+//    private List<Bonus> listaBonus;
+    
+    @Column
+    private String mes;
+    
+//    @OneToOne
+//    private Bonus bonus;
+    
+    @Column
+    private BigInteger faltas;
+    
+    @Column
+    private String ano;
 
 }

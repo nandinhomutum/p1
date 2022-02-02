@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.Main;
+package com.ufes.prova1.main;
 
-import com.UFES.prova1.DAO.Conexao;
-import com.UFES.prova1.Presenter.PrincipalPresenter;
+import com.ufes.prova1.presenter.PrincipalPresenter;
 
 /**
  *

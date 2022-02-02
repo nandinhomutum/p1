@@ -1,23 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.util.List;
 
 
 public interface DAOInterface<T> {       
 
-    public T get(int id) throws SQLException;
+    public T get(BigInteger id);
 	
-    public void save(T obj) throws SQLException;
+    public void save(T obj);
 	
-    public void update(T obj) throws SQLException;
+    //public void update(T obj);
 
-    public void delete(int id) throws SQLException;
+    public void delete(BigInteger id);
 
-    public ArrayList<T> getAll() throws SQLException;
+    public List<T> getAll();
 }

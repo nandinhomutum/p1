@@ -1,136 +1,141 @@
 
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import com.UFES.prova1.Model.Cargo;
-import com.UFES.prova1.Model.Funcionario;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import com.ufes.prova1.model.Funcionario;
 
-public class FuncionarioDAO implements DAOInterface<Funcionario>{
-    private static FuncionarioDAO INSTANCE;
-    private Funcionario funcionario;
-    Connection conn = Conexao.getInstance().connect();
+/**
+ *
+ * @author nandi
+ */
+public class FuncionarioDAO implements DAOInterface<Funcionario> {
+	private static FuncionarioDAO INSTANCE;
 
-    public FuncionarioDAO() {
-        
-        
-        
-    }
-     public static FuncionarioDAO getFuncionarioDAOInstance() {
+	private FuncionarioDAO() {
 
-        if (INSTANCE == null) {
-            INSTANCE = new FuncionarioDAO();
-            return INSTANCE;
-        } else {
-            return INSTANCE;
-        }
-    }
-    
-    @Override
-    public Funcionario get(int id) throws SQLException {
-        String sql = "SELECT * FROM funcionario WHERE idFuncionario = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, id);
-        ResultSet rs = stmt.executeQuery();
-        if(!rs.next())
-             new JOptionPane().showMessageDialog(new JFrame(),"Funcionario Inválido!","Aviso",JOptionPane.WARNING_MESSAGE);
-        
-        rs = stmt.executeQuery(); 
-        Funcionario funcionarioSelecionado = new Funcionario(rs.getInt("idFuncionario"),
-                   rs.getString("nomeFuncionario"),
-                   rs.getInt("idadeFuncionario"),
-                   rs.getDouble("salarioBaseFuncionario"),
-                   rs.getString("cargo"),
-                   rs.getString("dataAdmissaoFuncionario"),
-                   rs.getInt("faltas"),
-                   rs.getInt("km")
-            );
-        return funcionarioSelecionado;
-    }
+	}
 
+	public static FuncionarioDAO getFuncionarioDAOInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new FuncionarioDAO();
+			return INSTANCE;
+		} else {
+			return INSTANCE;
+		}
+	}
 
-    @Override
-    public void save(Funcionario funcionario) throws SQLException {
-        String sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, idadeFuncionario, salarioBaseFuncionario, cargo, dataAdmissaoFuncionario, faltas, km) VALUES (?,?,?,?,?,?,?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        //LocalDate dataAdmissao = Instant.ofEpochMilli(funcionario.getDataAdmissao()).atZone(ZoneId.systemDefault()).toLocalDate();
-        //Date dataAdmissao = java.sql.Date.valueOf(funcionario.getDataAdmissao());
-        
-        stmt.setString(1, funcionario.getNome().toUpperCase());
-        stmt.setInt(2, funcionario.getIdade());
-        stmt.setDouble(3, funcionario.getSalario());
-        stmt.setString(4, funcionario.getCargo().toUpperCase());
-        stmt.setString(5, funcionario.getDataAdmissao());
-        stmt.setInt(6, funcionario.getFaltas());
-        stmt.setInt(7, funcionario.getKm());
-        stmt.execute(); 
-    }
+	@Override
+	public Funcionario get(BigInteger id) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		Funcionario retorno = em.find(Funcionario.class, id);
+		em.getTransaction().commit();
+		return retorno;
+	}
+	
+	public List<Funcionario> get(String nome) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Funcionario> cq = cb.createQuery(Funcionario.class);
+		Root<Funcionario> rootEntry = cq.from(Funcionario.class);
+		CriteriaQuery<Funcionario> criteria = cq.select(rootEntry);
+		cq.where(rootEntry.get("nome").in(Arrays.asList(nome)));
+		TypedQuery<Funcionario> query = em.createQuery(criteria);
+		try {
+			List<Funcionario> retorno = query.getResultList();
+			em.getTransaction().commit();
+			return retorno;
+		} catch (NoResultException nre) {
+			em.getTransaction().commit();
+			return null;
+		}
+	}
+	
+	public List<Funcionario> getLikeName(String nome) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		Query query = em.createNativeQuery(
+				"SELECT f.id , f.nome , f.idade , f.salario , f.idCargo , f.mes, f.faltas , f.ano ,f.km FROM funcionarios f WHERE NOME LIKE ?",
+				Funcionario.class);
+		query.setParameter(1, "%" + nome + "%");
+		try {
+			@SuppressWarnings("unchecked")
+			List<Funcionario> retorno = query.getResultList();
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			return retorno;
+		} catch (NoResultException nre) {
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			;
+			return null;
+		}
+	}
 
-    @Override
-    public void update(Funcionario obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void save(Funcionario funcionario) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(funcionario);
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+	}
 
-    @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void delete(BigInteger id) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaDelete<Funcionario> query = criteriaBuilder.createCriteriaDelete(Funcionario.class);
+		Root<Funcionario> root = query.from(Funcionario.class);
+		query.where(root.get("id").in(Arrays.asList(id)));
+		em.getTransaction().begin();
+		em.createQuery(query).executeUpdate();
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+	}
 
-    @Override
-    public ArrayList<Funcionario> getAll() throws SQLException {
-       ArrayList<Funcionario> funcionarios = new ArrayList<>();
-       Statement stmt = conn.createStatement();
-       ResultSet rs = stmt.executeQuery("SELECT * FROM FUNCIONARIO");
-       while(rs.next()){
-         
-           funcionarios.add(new Funcionario(rs.getInt("idFuncionario"),
-                   rs.getString("nomeFuncionario"),
-                   rs.getInt("idadeFuncionario"),
-                   rs.getDouble("salarioBaseFuncionario"),
-                   rs.getString("cargo"),
-                   rs.getString("dataAdmissaoFuncionario"),
-                   rs.getInt("faltas"),
-                   rs.getInt("km")
-            )
-           );
-     
-       }
-       stmt.close();
-       return funcionarios;
-       }
-
-    public Funcionario getNome(String nome) throws SQLException {
-       String sql1 = "SELECT * FROM funcionario WHERE nomeFuncionario = ?";
-        PreparedStatement stmt1 = conn.prepareStatement(sql1);
-        stmt1.setString(1, nome);
-        ResultSet rs1 = stmt1.executeQuery();
-        if(!rs1.next())
-             new JOptionPane().showMessageDialog(new JFrame(),"Funcionario Inválido!","Aviso",JOptionPane.WARNING_MESSAGE);
-        
-        rs1 = stmt1.executeQuery(); 
-        Funcionario funcionarioSelecionado = new Funcionario(rs1.getInt("idFuncionario"),
-                   rs1.getString("nomeFuncionario"),
-                   rs1.getInt("idadeFuncionario"),
-                   rs1.getDouble("salarioBaseFuncionario"),
-                   rs1.getString("cargo"),
-                   rs1.getString("dataAdmissaoFuncionario"),
-                   rs1.getInt("faltas"),
-                   rs1.getInt("km")
-            );
-        return funcionarioSelecionado;
-    }
-
-        
+	@Override
+	public List<Funcionario> getAll(){
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Funcionario> cq = cb.createQuery(Funcionario.class);
+		Root<Funcionario> rootEntry = cq.from(Funcionario.class);
+		CriteriaQuery<Funcionario> all = cq.select(rootEntry);
+		TypedQuery<Funcionario> allQuery = em.createQuery(all);
+		List<Funcionario> retorno = allQuery.getResultList();
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+		return retorno;
+	}
 }

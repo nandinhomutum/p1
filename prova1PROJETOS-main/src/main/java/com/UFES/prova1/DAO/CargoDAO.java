@@ -3,77 +3,131 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import com.UFES.prova1.Model.Cargo;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import com.ufes.prova1.model.Cargo;
 
 /**
  *
  * @author nandi
  */
-public class CargoDAO implements DAOInterface<Cargo>{
-    
-    int id;
-    Connection conn = Conexao.getInstance().connect();
+public class CargoDAO implements DAOInterface<Cargo> {
 
-private static CargoDAO INSTANCE;
- public CargoDAO() {
-        
-        
-        
-    }
-     public static CargoDAO getCargoDAOInstance() {
+	private static CargoDAO INSTANCE;
 
-        if (INSTANCE == null) {
-            INSTANCE = new CargoDAO();
-            return INSTANCE;
-        } else {
-            return INSTANCE;
-        }
-    }
-    
-@Override
-    public ArrayList<Cargo> getAll() throws SQLException {
-      ArrayList<Cargo> cargos = new ArrayList<Cargo>();
-       Statement stmt = conn.createStatement();
-       ResultSet rs = stmt.executeQuery("SELECT * FROM CARGO");
-       while(rs.next()){
-         
-           cargos.add(new Cargo(
-                   rs.getInt("id"),
-                  rs.getString("nome")
-           ));
-           
-       }
-       stmt.close();
-       return cargos;
-       }
+	public CargoDAO() {
 
-    @Override
-    public Cargo get(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	}
 
- 
+	public static CargoDAO getCargoDAOInstance() {
 
-    @Override
-    public void save(Cargo obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		if (INSTANCE == null) {
+			INSTANCE = new CargoDAO();
+			return INSTANCE;
+		} else {
+			return INSTANCE;
+		}
+	}
 
-    @Override
-    public void update(Cargo obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public List<Cargo> getAll() {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Cargo> cq = cb.createQuery(Cargo.class);
+		Root<Cargo> rootEntry = cq.from(Cargo.class);
+		CriteriaQuery<Cargo> all = cq.select(rootEntry);
+		TypedQuery<Cargo> allQuery = em.createQuery(all);
+		List<Cargo> retorno = allQuery.getResultList();
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+		return retorno;
+	}
+		
+	public Cargo get(String nome) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Cargo> cq = cb.createQuery(Cargo.class);
+		Root<Cargo> rootEntry = cq.from(Cargo.class);
+		CriteriaQuery<Cargo> criteria = cq.select(rootEntry);
+		cq.where(rootEntry.get("nome").in(Arrays.asList(nome)));
+		TypedQuery<Cargo> query = em.createQuery(criteria);
+		try {
+			Cargo retorno = query.getSingleResult();
+			em.getTransaction().commit();
+			//em.close();
+			//emf.close();
+		  return retorno;
+		} catch (NoResultException nre) {
+			em.getTransaction().commit();
+			//em.close();
+			//emf.close();
+			return null;
+		}
+	}
 
-    @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
+	@Override
+	public Cargo get(BigInteger id) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		Cargo retorno = em.find(Cargo.class, id);
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+		return retorno;
+	}
+
+	@Override
+	public void save(Cargo cargo) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(cargo);
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+	}
+
+	@Override
+	public void delete(BigInteger id) {
+		// @SuppressWarnings("static-access")
+		// EntityManagerFactory emf = new
+		// Persistence().createEntityManagerFactory("persistenceUnit");
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaDelete<Cargo> query = criteriaBuilder.createCriteriaDelete(Cargo.class);
+		Root<Cargo> root = query.from(Cargo.class);
+		query.where(root.get("id").in(Arrays.asList(id)));
+		em.createQuery(query).executeUpdate();
+		em.getTransaction().commit();
+		//em.close();
+		//emf.close();
+	}
 }

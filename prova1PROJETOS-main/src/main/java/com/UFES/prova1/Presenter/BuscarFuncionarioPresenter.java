@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.Presenter;
+package com.ufes.prova1.presenter;
 
-import com.UFES.prova1.DAO.FuncionarioDAO;
-import com.UFES.prova1.Model.Funcionario;
-import com.UFES.prova1.View.TelaBuscarFuncionarioView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.math.BigInteger;
+import java.util.List;
+
 import javax.swing.table.DefaultTableModel;
+
+import com.ufes.prova1.business.FuncionarioBusiness;
+import com.ufes.prova1.dao.FuncionarioDAO;
+import com.ufes.prova1.model.Funcionario;
+import com.ufes.prova1.utilidades.Notificador;
+import com.ufes.prova1.view.TelaBuscarFuncionarioView;
 
 /**
  *
@@ -23,104 +25,176 @@ import javax.swing.table.DefaultTableModel;
 public class BuscarFuncionarioPresenter {
     
     private TelaBuscarFuncionarioView view;
+    private FuncionarioBusiness business;
     
-    public BuscarFuncionarioPresenter() throws SQLException{
-        ConfigurarTela();
-        
-      view.getBtnFechar().addActionListener(new ActionListener() {
-           
-           public void actionPerformed(ActionEvent ae) {
-                   view.dispose();
-            } 
-        });
-      
-      view.getBtnBonus().addActionListener(new ActionListener() {
-           
-                      public void actionPerformed(ActionEvent ae) {
-               try {
-                   Funcionario funcionario = pegarFuncionario();
-                   new FuncionarioHistoricoPresenter(funcionario);
-               } catch (SQLException ex) {
-                   Logger.getLogger(BuscarFuncionarioPresenter.class.getName()).log(Level.SEVERE, null, ex);
-               }
-                  
-            } 
-
-        });
-      
-      view.getBtnBuscar().addActionListener(new ActionListener() {
-           
-           public void actionPerformed(ActionEvent ae) {
-                   //view.dispose();
-            } 
-        });
-      
-      view.getBtnVisualizar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               }
-           
-        });
-      
-      view.getBtnNovo().addActionListener(new ActionListener() {
-           
-           @Override
-           public void actionPerformed(ActionEvent ae) {
-               try {
-                   new ManterFuncionarioPresenter();
-               } catch (SQLException ex) {
-                   Logger.getLogger(BuscarFuncionarioPresenter.class.getName()).log(Level.SEVERE, null, ex);
-               }
-            } 
-        });
-      
-      view.getBtnAdicionar().addActionListener(new ActionListener() {
-           
-           public void actionPerformed(ActionEvent ae) {
-               try {
-                   Funcionario funcionario = pegarFuncionario();
-                   new AdicionarBonusPresenter(funcionario);
-               } catch (SQLException ex) {
-                   Logger.getLogger(BuscarFuncionarioPresenter.class.getName()).log(Level.SEVERE, null, ex);
-               }
-                  
-            } 
-        });
+    public BuscarFuncionarioPresenter(){
+        this.business = FuncionarioBusiness.getInstance();
+        configurarTela();
     }
-    
-    
-    private void ConfigurarTela() throws SQLException{
+      
+      public void abrirManterFuncionario() {
+  		new ManterFuncionarioPresenter();
+                this.view.dispose();
+    }
+        
+    private void configurarTela(){
         this.view = new TelaBuscarFuncionarioView();
+        criarEventListeners();
         PreencherTabela();
         view.setVisible(true);
     }
     
     
-    public void PreencherTabela() throws SQLException{
-      DefaultTableModel tabela = new DefaultTableModel();
-      tabela.addColumn("ID");
-      tabela.addColumn("NOME");
-      tabela.addColumn("IDADE");
-      tabela.addColumn("SALARIO BASE");
-      tabela.addColumn("CARGO");
-      ArrayList<Funcionario> listaFuncionarios = FuncionarioDAO.getFuncionarioDAOInstance().getAll();
+	private void criarEventListeners() {
+		view.getBtnFechar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				sair();
+			}
+		});
+
+		view.getBtnBuscar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				buscarFuncionariosPorNome();
+			}
+		});
+		
+		view.getBtnNovo().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				abrirManterFuncionario();
+			}
+		});
+		
+		view.getEditarButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				alterar();
+			}
+		});
+		
+		view.getBtnExcluir().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				excluir();
+			}
+		});
+		
+		view.getBtnAdicionar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				abrirAdicionarBonus();
+			}
+		});
+		
+		view.getBtnBonus().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				abrirBonusFuncionario();
+			}
+		});
+	}
+
+	public void PreencherTabela(){
+        DefaultTableModel tabela = (DefaultTableModel) view.getTbFuncionarios().getModel();
+     
+      List<Funcionario> listaFuncionarios = FuncionarioBusiness.getInstance().getAll();
       for (Funcionario funcionario: listaFuncionarios){
           tabela.addRow(new Object[]{ funcionario.getId(),
               funcionario.getNome(),
               funcionario.getIdade(),
-              funcionario.getSalario(),
-              funcionario.getCargo()
+              funcionario.getCargo().getNome(),
+              funcionario.getSalario()
           });
          
       }
        view.getTbFuncionarios().setModel(tabela);
     }
     
-    public Funcionario pegarFuncionario() throws SQLException{
-        DefaultTableModel tabela = (DefaultTableModel) view.getTbFuncionarios().getModel();
-        int linha = view.getTbFuncionarios().getSelectedRow();
-        int id = (int) view.getTbFuncionarios().getValueAt(linha, 0);
-       return FuncionarioDAO.getFuncionarioDAOInstance().get(id);  
+    public void buscarFuncionariosPorNome() {
+    	String nome = this.view.getTxtNome().getText();
+    	List<Funcionario> listaFuncionarios = business.getLikeName(nome);
+    	DefaultTableModel tabela = (DefaultTableModel) view.getTbFuncionarios().getModel();
+    	limpaTabela(tabela);
+        for (Funcionario funcionario: listaFuncionarios){
+            tabela.addRow(new Object[]{ funcionario.getId(),
+                funcionario.getNome(),
+                funcionario.getIdade(),
+                funcionario.getCargo().getNome(),
+                funcionario.getSalario()
+            });
+           
+        }
+        view.getTbFuncionarios().setModel(tabela);
     }
     
+    public Funcionario pegarFuncionario(){
+        //DefaultTableModel tabela = (DefaultTableModel) view.getTbFuncionarios().getModel();
+        int linha = view.getTbFuncionarios().getSelectedRow();
+        BigInteger id = new BigInteger(view.getTbFuncionarios().getValueAt(linha, 0).toString());
+       return FuncionarioDAO.getFuncionarioDAOInstance().get(id);        
+    }
+    
+    public void alterar(){
+	    int linhaSelecionada = this.view.getTbFuncionarios().getSelectedRow();
+	    if(linhaSelecionada > -1){
+	      BigInteger id = new BigInteger(this.view.getTbFuncionarios().getModel().getValueAt(linhaSelecionada, 0).toString());
+	      String nomeCargo = this.view.getTbFuncionarios().getModel().getValueAt(linhaSelecionada, 3).toString();
+	      new ManterFuncionarioPresenter(id,nomeCargo);
+	      this.view.dispose();
+	    }else{
+	        Notificador.getInstance().disparaAviso("Selecione um funcionário para editar");
+	    }
+	}
+
+	public void excluir(){
+	    int linhaSelecionada = this.view.getTbFuncionarios().getSelectedRow();
+	    if(linhaSelecionada > -1){
+	      BigInteger id = new BigInteger(this.view.getTbFuncionarios().getModel().getValueAt(linhaSelecionada, 0).toString());
+	      business.delete(id);
+	      this.view.dispose();
+	      configurarTela();
+	    }else{
+	        Notificador.getInstance().disparaAviso("Selecione um funcionário para excluir");
+	    }
+	}
+
+	private void limpaTabela(DefaultTableModel tabela) {
+    	int rowCount = tabela.getRowCount();
+    	for (int i = rowCount - 1; i >= 0; i--) {
+    		tabela.removeRow(i);
+    	}
+    }
+	
+	private void abrirAdicionarBonus() {
+		int linhaSelecionada = this.view.getTbFuncionarios().getSelectedRow();
+		if (linhaSelecionada > -1) {
+			BigInteger id = new BigInteger(
+					this.view.getTbFuncionarios().getModel().getValueAt(linhaSelecionada, 0).toString());
+			Funcionario funcionario = business.get(id);
+			new AdicionarBonusPresenter(funcionario);
+			view.dispose();
+		} else {
+			Notificador.getInstance().disparaAviso("Selecione um funcionário");
+		}
+	}
+	
+	private void abrirBonusFuncionario() {
+		int linhaSelecionada = this.view.getTbFuncionarios().getSelectedRow();
+		if (linhaSelecionada > -1) {
+			BigInteger id = new BigInteger(
+					this.view.getTbFuncionarios().getModel().getValueAt(linhaSelecionada, 0).toString());
+			Funcionario funcionario = business.get(id);
+			new FuncionarioHistoricoPresenter(funcionario);
+		} else {
+			Notificador.getInstance().disparaAviso("Selecione um funcionário");
+		}
+		view.dispose();
+	}
+    
+    public void sair() {
+		new PrincipalPresenter();
+		this.view.dispose();
+    }
 }

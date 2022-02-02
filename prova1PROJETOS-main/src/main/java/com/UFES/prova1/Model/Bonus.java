@@ -3,35 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.Model;
+package com.ufes.prova1.model;
 
-import java.util.Date;
+import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author nandi
  */
-public class Bonus {
-    
-    private String nome;
-    
-    
-     public Bonus(String nome) {
-        this.nome = nome;
-    }
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Bonus{" + ", nome=" + nome +'}';
-    }
-
+@Getter
+@Setter
+public abstract class Bonus implements IBonus{
+	private BigDecimal percentual;
+	private BigDecimal valor;
 }
    

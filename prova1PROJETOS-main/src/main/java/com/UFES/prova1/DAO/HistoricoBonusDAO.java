@@ -2,18 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import com.UFES.prova1.Model.Funcionario;
-import com.UFES.prova1.Model.HistoricoBonus;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import com.ufes.prova1.model.HistoricoBonus;
 
 /**
  *
@@ -21,8 +25,10 @@ import javax.swing.JOptionPane;
  */
 public class HistoricoBonusDAO implements DAOInterface<HistoricoBonus>{
     private static HistoricoBonusDAO INSTANCE;
-    private HistoricoBonus historico;
-    Connection conn = Conexao.getInstance().connect();
+    
+    private HistoricoBonusDAO() {
+
+	}   
     
     public static HistoricoBonusDAO getHistoricoDAOInstance() {
 
@@ -33,61 +39,71 @@ public class HistoricoBonusDAO implements DAOInterface<HistoricoBonus>{
             return INSTANCE;
         }
     }
-    @Override
-    public HistoricoBonus get(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void save(HistoricoBonus historico) throws SQLException {
-       String sql = "INSERT INTO HISTORICOBONUS (nome , tipoBonus, valorBonus, mes, ano) VALUES (?,?,?,?,?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, historico.getNome().toUpperCase());
-        stmt.setString(2, historico.getTipoBonus());
-        stmt.setDouble(3, historico.getValorBonus());
-        stmt.setInt(4, historico.getMes());
-        stmt.setInt(5, historico.getAno());
-        stmt.execute(); 
-    }
-
-    @Override
-    public void update(HistoricoBonus historicoBonus) throws SQLException {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ArrayList<HistoricoBonus> getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
-    public ArrayList<HistoricoBonus> getAllFuncionario(String nomeFuncionario) throws SQLException {
-        
-       String sql = "SELECT * FROM HistoricoBonus WHERE nome = ?";
-       
-       PreparedStatement stmt = conn.prepareStatement(sql);
-       stmt.setString(1, nomeFuncionario);
-       ArrayList<HistoricoBonus> historico = new ArrayList<>();
-       ResultSet rs = stmt.executeQuery();
-       
-      
-       while(rs.next()){
-         
-           historico.add(new HistoricoBonus(
-                   rs.getString("nome"),
-                   rs.getString("tipoBonus"),
-                   rs.getDouble("valorBonus"),
-                   rs.getInt("mes"),
-                   rs.getInt("ano"))
-           );
-     
-       }
-       stmt.close();
-       return historico;
-       }
+    @Override
+    public HistoricoBonus get(BigInteger id){
+    	EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		HistoricoBonus retorno = em.find(HistoricoBonus.class, id);
+		em.getTransaction().commit();
+		return retorno;
     }
+
+    @Override
+	public void save(HistoricoBonus historico) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		em.merge(historico);
+		em.getTransaction().commit();
+	}
+
+    @Override
+	public void delete(BigInteger id) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaDelete<HistoricoBonus> query = criteriaBuilder.createCriteriaDelete(HistoricoBonus.class);
+		Root<HistoricoBonus> root = query.from(HistoricoBonus.class);
+		query.where(root.get("id").in(Arrays.asList(id)));
+		em.getTransaction().begin();
+		em.createQuery(query).executeUpdate();
+		em.getTransaction().commit();
+	}
+
+    @Override
+	public List<HistoricoBonus> getAll(){
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<HistoricoBonus> cq = cb.createQuery(HistoricoBonus.class);
+		Root<HistoricoBonus> rootEntry = cq.from(HistoricoBonus.class);
+		CriteriaQuery<HistoricoBonus> all = cq.select(rootEntry);
+		TypedQuery<HistoricoBonus> allQuery = em.createQuery(all);
+		List<HistoricoBonus> retorno = allQuery.getResultList();
+		em.getTransaction().commit();
+		return retorno;
+	}
+    
+    public List<HistoricoBonus> getAllFuncionario(String nomeFuncionario) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		Query query = em.createNativeQuery(
+				"SELECT h.id, h.nome, h.tipoBonus, h.valorBonus, h.mes, h.ano FROM HistoricoBonus h WHERE h.nome = ?",
+				HistoricoBonus.class);
+		query.setParameter(1, nomeFuncionario);
+		try {
+			@SuppressWarnings("unchecked")
+			List<HistoricoBonus> retorno = query.getResultList();
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			return retorno;
+		} catch (NoResultException nre) {
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			;
+			return null;
+		}
+	}
+}
   

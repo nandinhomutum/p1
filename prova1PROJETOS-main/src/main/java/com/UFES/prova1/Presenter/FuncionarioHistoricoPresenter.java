@@ -2,20 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.UFES.prova1.Presenter;
+package com.ufes.prova1.presenter;
 
-import com.UFES.prova1.DAO.FuncionarioDAO;
-import com.UFES.prova1.DAO.HistoricoBonusDAO;
-import com.UFES.prova1.DAO.HistoricoSalarioDAO;
-import com.UFES.prova1.Model.Funcionario;
-import com.UFES.prova1.Model.HistoricoBonus;
-import com.UFES.prova1.Model.HistoricoSalario;
-import com.UFES.prova1.View.TelaHistoricoFuncionariosView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.util.List;
+
 import javax.swing.table.DefaultTableModel;
+
+import com.ufes.prova1.dao.HistoricoBonusDAO;
+import com.ufes.prova1.dao.HistoricoSalarioDAO;
+import com.ufes.prova1.model.Funcionario;
+import com.ufes.prova1.model.HistoricoBonus;
+import com.ufes.prova1.model.HistoricoSalario;
+import com.ufes.prova1.view.TelaHistoricoFuncionariosView;
 
 /**
  *
@@ -26,36 +27,28 @@ public class FuncionarioHistoricoPresenter {
     private TelaHistoricoFuncionariosView view;
     private final Funcionario funcionario;
     
-    public FuncionarioHistoricoPresenter(Funcionario funcionario) throws SQLException {
-        ConfigurarTela();
+    public FuncionarioHistoricoPresenter(Funcionario funcionario){
+        configurarTela();
         this.funcionario = funcionario;
         preencherTela(funcionario);
         PreencherTabelaBonus();
-        PreencherTabelaSalario();    
-       
-        
-        view.getJbSair().addActionListener(new ActionListener() {
-           
-           public void actionPerformed(ActionEvent ae) {
-                   view.dispose();
-            } 
-        });
-        
+        PreencherTabelaSalario();        
     }
     
-     private void ConfigurarTela(){
+     private void configurarTela(){
         this.view = new TelaHistoricoFuncionariosView();
+        criarEventListeners();
         view.setVisible(true);
     }
 
     private void preencherTela(Funcionario funcionario) {
         view.getJlbNome().setText(funcionario.getNome());
-        view.getJlbCargo().setText(funcionario.getCargo());
+        view.getJlbCargo().setText(funcionario.getCargo().getNome());
         view.getjLBIdade().setText(String.valueOf(funcionario.getIdade()));
         view.getJlbSalario().setText(String.valueOf(funcionario.getSalario()));
     }
     
-    public void PreencherTabelaBonus() throws SQLException{
+    public void PreencherTabelaBonus(){
       String nomeBuscado = funcionario.getNome();
       DefaultTableModel tabela = new DefaultTableModel();
       tabela.addColumn("BONUS");
@@ -63,7 +56,7 @@ public class FuncionarioHistoricoPresenter {
       tabela.addColumn("MES");
       tabela.addColumn("ANO");
       
-      ArrayList<HistoricoBonus> listaBonus = HistoricoBonusDAO.getHistoricoDAOInstance().getAllFuncionario(nomeBuscado);
+      List<HistoricoBonus> listaBonus = HistoricoBonusDAO.getHistoricoDAOInstance().getAllFuncionario(nomeBuscado);
       for (HistoricoBonus bonus: listaBonus){
           tabela.addRow(new Object[]{ bonus.getTipoBonus(),
               bonus.getValorBonus(),
@@ -75,15 +68,15 @@ public class FuncionarioHistoricoPresenter {
        view.getjTBonus().setModel(tabela);
     }
 
-    private void PreencherTabelaSalario() throws SQLException {
-        String nomeBuscado = funcionario.getNome();
+    private void PreencherTabelaSalario(){
+        BigInteger idFuncionario = funcionario.getId();
       DefaultTableModel tabela1 = new DefaultTableModel();
       tabela1.addColumn("BONUS");
       tabela1.addColumn("VALOR RECEBIDO");
       tabela1.addColumn("MES");
       tabela1.addColumn("ANO");
       
-      ArrayList<HistoricoSalario> listaSalario = HistoricoSalarioDAO.getHistoricoDAOInstance().getAllFuncionario(nomeBuscado);
+      List<HistoricoSalario> listaSalario = HistoricoSalarioDAO.getHistoricoDAOInstance().getAllFuncionario(idFuncionario);
       for (HistoricoSalario salario: listaSalario){
           tabela1.addRow(new Object[]{ salario.getBonus(),
               salario.getSalarioFinal(),
@@ -94,5 +87,19 @@ public class FuncionarioHistoricoPresenter {
       }
        view.getjTSalario().setModel(tabela1);
     }
+
+	private void criarEventListeners() {
+		view.getJbSair().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent ae) {
+				sair();
+			}
+		});
+	}
+
+	public void sair() {
+		new PrincipalPresenter();
+		this.view.dispose();
+	}
 
 }

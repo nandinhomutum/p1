@@ -3,65 +3,125 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.Presenter;
+package com.ufes.prova1.presenter;
 
-import com.UFES.prova1.View.TelaPrincipalView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import com.ufes.prova1.view.TelaPrincipalView;
 
 /**
  *
  * @author nandi
  */
 public class PrincipalPresenter {
-    
-    private TelaPrincipalView view;
-    
-    public PrincipalPresenter(){
-        configurarTela();
-     
-       
-    view.getMenuManterFuncionario().addActionListener(new ActionListener() {
-            @Override
-           public void actionPerformed(ActionEvent ae) {
-                try {
-                    new ManterFuncionarioPresenter();
-                } catch (SQLException ex) {
-                    Logger.getLogger(PrincipalPresenter.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } 
-        });        
-      
 
-     view.getMenuBuscarFuncionario().addActionListener(new ActionListener() {
+    private TelaPrincipalView view;
+
+    public PrincipalPresenter() {
+        configurarTela();   
+    }
+    
+
+    public void abrirManterFuncionario() { 
+        new ManterFuncionarioPresenter();
+        this.sair();
+    }
+
+    public void abreBuscarFuncionario() {
+        new BuscarFuncionarioPresenter();
+        this.sair();
+    }
+
+    public void abreSalario() {
+    	new SalarioPresenter();
+        this.sair();
+    }
+    
+    public void abreCargos(){
+        new CargosPresenter();
+        this.sair();
+    }
+    
+    public void sair(){
+        this.view.dispose();
+    }
+
+    private void configurarTela() {
+        this.view = new TelaPrincipalView();
+        
+        view.getMenuManterFuncionario().addActionListener(new ActionListener() {           
             @Override
            public void actionPerformed(ActionEvent ae) {
-                try {
-                    new BuscarFuncionarioPresenter();
-                } catch (SQLException ex) {
-                    Logger.getLogger(PrincipalPresenter.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    abrirManterFuncionario();
             } 
         });
- 
-     view.getMenuCalcularSalario().addActionListener(new ActionListener() {
+        
+        view.getMenuBuscarFuncionario().addActionListener(new ActionListener() {           
             @Override
            public void actionPerformed(ActionEvent ae) {
-                   new SalarioPresenter();
+                    abreBuscarFuncionario();
             } 
-        });        
-      
-  
-    }
-             
-    private void configurarTela(){
-        this.view = new TelaPrincipalView();
+        }); 
+        
+        view.getMenuCalcularSalario().addActionListener(new ActionListener() {           
+            @Override
+           public void actionPerformed(ActionEvent ae) {
+                    abreSalario();
+            } 
+        }); 
+        
+        view.getMenuCargos().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				abreCargos();				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+		});  
+        
+        view.getMenuSair().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				sair();				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+		});  
+        
         this.view.setVisible(true);
-       
-    
     }
-    
+
 }

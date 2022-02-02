@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.Utilidades;
+package com.ufes.prova1.utilidades;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 
 /**
@@ -26,11 +27,11 @@ public class ManipuladorComboBox {
         private static final ManipuladorComboBox INSTANCE = new ManipuladorComboBox();
     }
     
-    public void RemoveItens(JComboBox<String> jcb){
+    public void removeItens(JComboBox<String> jcb){
             jcb.removeAllItems();                    
     }
     
-    public void PreencherComboBox(ArrayList<String> itens ,JComboBox<String> jcb){
+    public void preencherComboBox(List<String> itens, JComboBox<String> jcb){
             jcb.removeAllItems();
             for(String item : itens){
                 jcb.addItem(item);

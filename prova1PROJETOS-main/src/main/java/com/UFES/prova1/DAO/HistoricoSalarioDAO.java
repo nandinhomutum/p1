@@ -2,16 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import com.UFES.prova1.Model.Funcionario;
-import com.UFES.prova1.Model.HistoricoBonus;
-import com.UFES.prova1.Model.HistoricoSalario;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import com.ufes.prova1.model.HistoricoSalario;
 
 /**
  *
@@ -19,8 +25,10 @@ import java.util.ArrayList;
  */
 public class HistoricoSalarioDAO implements DAOInterface<HistoricoSalario>{
 private static HistoricoSalarioDAO INSTANCE;
-    private HistoricoSalario funcionario;
-    Connection conn = Conexao.getInstance().connect();
+
+    private HistoricoSalarioDAO() {
+
+	}   
     
     public static HistoricoSalarioDAO getHistoricoDAOInstance() {
 
@@ -33,109 +41,94 @@ private static HistoricoSalarioDAO INSTANCE;
     }
 
     @Override
-    public HistoricoSalario get(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public HistoricoSalario get(BigInteger id){
+    	EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		HistoricoSalario retorno = em.find(HistoricoSalario.class, id);
+		em.getTransaction().commit();
+		return retorno;
     }
 
     @Override
-    public void save(HistoricoSalario historico) throws SQLException {
-       String sql = "INSERT INTO HISTORICOSALARIO (nome , bonus, salarioFinal, mes, ano) VALUES (?,?,?,?,?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, historico.getNome().toUpperCase());
-        stmt.setDouble(2, historico.getBonus());
-        stmt.setDouble(3, historico.getSalarioFinal());
-        stmt.setInt(4, historico.getMes());
-        stmt.setInt(5, historico.getAno());
-        stmt.execute(); 
-    }
+	public void save(HistoricoSalario historico) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		em.merge(historico);
+		em.getTransaction().commit();
+	}
 
     @Override
-    public void update(HistoricoSalario obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	public void delete(BigInteger id) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaDelete<HistoricoSalario> query = criteriaBuilder.createCriteriaDelete(HistoricoSalario.class);
+		Root<HistoricoSalario> root = query.from(HistoricoSalario.class);
+		query.where(root.get("id").in(Arrays.asList(id)));
+		em.getTransaction().begin();
+		em.createQuery(query).executeUpdate();
+		em.getTransaction().commit();
+	}
 
     @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	public List<HistoricoSalario> getAll(){
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<HistoricoSalario> cq = cb.createQuery(HistoricoSalario.class);
+		Root<HistoricoSalario> rootEntry = cq.from(HistoricoSalario.class);
+		CriteriaQuery<HistoricoSalario> all = cq.select(rootEntry);
+		TypedQuery<HistoricoSalario> allQuery = em.createQuery(all);
+		List<HistoricoSalario> retorno = allQuery.getResultList();
+		em.getTransaction().commit();
+		return retorno;
+	}
 
-    @Override
-    public ArrayList<HistoricoSalario> getAll() throws SQLException {
-        String sql = "SELECT * FROM HistoricoSalario";
-       
-       PreparedStatement stmt = conn.prepareStatement(sql);
-       
-       ArrayList<HistoricoSalario> historico = new ArrayList<>();
-       ResultSet rs = stmt.executeQuery();
-       
-      
-       while(rs.next()){
-         
-           historico.add(new HistoricoSalario(
-                   rs.getString("nome"),
-                   rs.getDouble("bonus"),
-                   rs.getDouble("salarioFinal"),
-                   rs.getInt("mes"),
-                   rs.getInt("ano"))
-           );
-     
-       }
-       stmt.close();
-       return historico;
-       }
-       
-    
-    
-     public ArrayList<HistoricoSalario> getAllFuncionario(String nomeFuncionario) throws SQLException {
-        
-       String sql = "SELECT * FROM HistoricoSalario WHERE nome = ?";
-       
-       PreparedStatement stmt = conn.prepareStatement(sql);
-       stmt.setString(1, nomeFuncionario);
-       ArrayList<HistoricoSalario> historico = new ArrayList<>();
-       ResultSet rs = stmt.executeQuery();
-       
-      
-       while(rs.next()){
-         
-           historico.add(new HistoricoSalario(
-                   rs.getString("nome"),
-                   rs.getDouble("bonus"),
-                   rs.getDouble("salarioFinal"),
-                   rs.getInt("mes"),
-                   rs.getInt("ano"))
-           );
-     
-       }
-       stmt.close();
-       return historico;
-       }
-
-    public ArrayList<HistoricoSalario> getAllMes(String mes, String ano) throws SQLException {
-       
-       String sql = "SELECT * FROM HistoricoSalario WHERE mes = ? AND ano = ?";
-       
-       PreparedStatement stmt = conn.prepareStatement(sql);
-       stmt.setString(1, mes);
-       stmt.setString(2, ano);
-       ArrayList<HistoricoSalario> historico = new ArrayList<>();
-       ResultSet rs = stmt.executeQuery();
-       
-      
-       while(rs.next()){
-         
-           historico.add(new HistoricoSalario(
-                   rs.getString("nome"),
-                   rs.getDouble("bonus"),
-                   rs.getDouble("salarioFinal"),
-                   rs.getInt("mes"),
-                   rs.getInt("ano"))
-           );
-     
-       }
-       stmt.close();
-       return historico;
-       }
+	public List<HistoricoSalario> getAllFuncionario(BigInteger idFuncionario) {
+		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		em.getTransaction().begin();
+		Query query = em.createNativeQuery(
+				"SELECT h.id, h.idFuncionario, h.bonus, h.salarioFinal, h.mes, h.ano FROM HistoricoSalario h WHERE h.idFuncionario = ?",
+				HistoricoSalario.class);
+		query.setParameter(1, idFuncionario);
+		try {
+			@SuppressWarnings("unchecked")
+			List<HistoricoSalario> retorno = query.getResultList();
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			return retorno;
+		} catch (NoResultException nre) {
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			;
+			return null;
+		}
+	}
+	
+	public List<HistoricoSalario> getAllMes(String mes, String ano) {
+		EntityManager em = Conexao.getInstance().abreTransacao();
+		em.getTransaction().begin();
+		Query query = em.createNativeQuery(
+				"SELECT h.id, h.idFuncionario, h.bonus, h.salarioFinal, h.mes, h.ano FROM HistoricoSalario h WHERE h.mes = ? AND h.ano = ?",
+				HistoricoSalario.class);
+		query.setParameter(1, mes);
+		query.setParameter(2, ano);
+		try {
+			@SuppressWarnings("unchecked")
+			List<HistoricoSalario> retorno = query.getResultList();
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			return retorno;
+		} catch (NoResultException nre) {
+			// em.close();
+			// emf.close();
+			em.getTransaction().commit();
+			;
+			return null;
+		}
+	}
    }
     
     

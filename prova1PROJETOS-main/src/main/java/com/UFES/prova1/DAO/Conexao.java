@@ -3,9 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.UFES.prova1.DAO;
+package com.ufes.prova1.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -15,8 +21,11 @@ public class Conexao {
     
 
   private Connection conn;
+  private EntityManagerFactory emf;
+  private EntityManager em;
 
-    Conexao() {
+    private Conexao() {
+    	    	
     }
 
     public static Conexao getInstance() {
@@ -28,6 +37,7 @@ public class Conexao {
         private static final Conexao INSTANCE = new Conexao();
     }
 
+    @Deprecated
     public Connection connect() {
         if (null == this.getConn()) {
             try {
@@ -45,6 +55,24 @@ public class Conexao {
         return this.conn;
     }
     
+    @SuppressWarnings("static-access")
+	public EntityManager abreTransacao() {
+    	if(null != em) {
+    		if(em.isJoinedToTransaction()) {
+    			em.close();
+    			emf.close();
+    			emf = new Persistence().createEntityManagerFactory("persistenceUnit");
+        		em = emf.createEntityManager();        		
+    		}
+    		return em;
+    	} else {
+			emf = new Persistence().createEntityManagerFactory("persistenceUnit");
+    		em = emf.createEntityManager();
+    		return em;
+    	}
+    }
+    
+    @Deprecated
     public void disconect(){
         if (null != this.getConn()) {        
             try {                
@@ -55,7 +83,7 @@ public class Conexao {
             }
         }
     }
-
+    @Deprecated
     public Connection connect(String url) {
         if (null == this.getConn()) {
             try {
@@ -71,7 +99,7 @@ public class Conexao {
         }
         return this.conn;
     }
-
+    @Deprecated
     private Connection getConn() {
         return conn;
     }
