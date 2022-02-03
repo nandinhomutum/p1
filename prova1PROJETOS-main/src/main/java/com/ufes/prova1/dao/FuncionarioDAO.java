@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.ufes.prova1.model.Funcionario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 
 /**
  *
@@ -65,9 +66,7 @@ public class FuncionarioDAO implements DAOInterface<Funcionario> {
 	}
 	
 	public List<Funcionario> getLikeName(String nome) {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
+		
 		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
 		em.getTransaction().begin();
 		Query query = em.createNativeQuery(
@@ -77,13 +76,11 @@ public class FuncionarioDAO implements DAOInterface<Funcionario> {
 		try {
 			@SuppressWarnings("unchecked")
 			List<Funcionario> retorno = query.getResultList();
-			// em.close();
-			// emf.close();
+			
 			em.getTransaction().commit();
 			return retorno;
 		} catch (NoResultException nre) {
-			// em.close();
-			// emf.close();
+			                 GerenciadorDeLog.getInstance().getLogger().severe(nre.getMessage());
 			em.getTransaction().commit();
 			;
 			return null;

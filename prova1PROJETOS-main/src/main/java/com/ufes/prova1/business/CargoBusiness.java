@@ -4,7 +4,10 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.ufes.prova1.dao.CargoDAO;
+import com.ufes.prova1.dao.FuncionarioDAO;
 import com.ufes.prova1.model.Cargo;
+import com.ufes.prova1.model.Funcionario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 import com.ufes.prova1.utilidades.Notificador;
 
 public class CargoBusiness {
@@ -37,12 +40,19 @@ public class CargoBusiness {
 	
 	public void cadastrarCargo(String nome) {
 		if (null != CargoDAO.getCargoDAOInstance().get(nome)) {
-			System.out.println("Cargo " + nome + "  já existe!!!");
-			Notificador.getInstance().disparaAviso("Cargo " + nome + " já existe!!!");
+			String mensagem = "Cargo " + nome + "  já existe!!!";
+			System.out.println(mensagem);
+			Notificador.getInstance().disparaAviso(mensagem);
+			GerenciadorDeLog.getInstance().getLogger().warning(mensagem);
+
 		} else {
 			Cargo cargo = new Cargo();
 			cargo.setNome(nome);
 			save(cargo);
+			String mensagem = "Cargo " + nome + " cadastrado com sucesso";
+			System.out.println(mensagem);
+			Notificador.getInstance().disparaInfo(mensagem);
+			GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 		}
 	}
 	
@@ -67,8 +77,10 @@ public class CargoBusiness {
 	private Boolean validaUpdate(Cargo cargo) {
 		Cargo cargoBanco = get(cargo.getNome());
 		if (null != cargoBanco && !cargoBanco.getId().equals(cargo.getId())) {
-			System.out.println("Já existe Cargo com nome " + cargo.getNome() + "!!!");
-			Notificador.getInstance().disparaAviso("Já existe Cargo com nome " + cargo.getNome() + "!!!");
+			String mensagem = "Já existe Cargo com nome " + cargo.getNome() + "!!!";
+			System.out.println(mensagem);
+			Notificador.getInstance().disparaAviso(mensagem);
+			GerenciadorDeLog.getInstance().getLogger().warning(mensagem);
 			return Boolean.FALSE;
 		} else {
 			return Boolean.TRUE;
@@ -77,15 +89,34 @@ public class CargoBusiness {
 	
 	private Boolean validate(Cargo cargo) {
 		if(null == cargo.getNome() || "".equals(cargo.getNome())) {
-			System.out.println("Nome do Cargo não pode Estar com nome Vazio");
-			Notificador.getInstance().disparaAviso("Nome do Cargo não pode Estar com nome Vazio");
+			String mensagem = "Nome do Cargo não pode Estar com nome Vazio";
+			System.out.println(mensagem);
+			Notificador.getInstance().disparaAviso(mensagem);
+			GerenciadorDeLog.getInstance().getLogger().warning(mensagem);
 			return Boolean.FALSE;
 		} else {
 			return Boolean.TRUE;
 		}
 	}
+        
+        private Boolean validateDelete(BigInteger id) {
+		Cargo cargo = CargoDAO.getCargoDAOInstance().get(id);
+		List<Funcionario> funcionarios = FuncionarioDAO.getFuncionarioDAOInstance().getAll();
+		for(Funcionario funcionario : funcionarios) {
+			if(cargo.getId().equals(funcionario.getCargo().getId())) {
+				String mensagem = "Cargo não pode ser deletado, há funcionários com este cargo cadastrados!!!";
+				System.out.println(mensagem);
+				Notificador.getInstance().disparaErro(mensagem);
+				GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
+				return Boolean.FALSE;			
+			}
+		}
+		return Boolean.TRUE;
+	}
 	
 	public void delete(BigInteger id) {
-		CargoDAO.getCargoDAOInstance().delete(id);
+		if (validateDelete(id)) {
+			CargoDAO.getCargoDAOInstance().delete(id);
+		}
 	}
 }

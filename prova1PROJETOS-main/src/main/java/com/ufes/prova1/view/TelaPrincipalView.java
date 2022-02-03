@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ufes.prova1.view;
 
 
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- *
- * @author nandi
- */
 @SuppressWarnings("serial")
 @Getter
 @Setter
@@ -65,6 +56,7 @@ public class TelaPrincipalView extends javax.swing.JFrame {
         menuSalario = new javax.swing.JMenu();
         menuCalcularSalario = new javax.swing.JMenuItem();
         menuFerramentas = new javax.swing.JMenu();
+        menuLog = new javax.swing.JMenuItem();
         menuSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -82,29 +74,40 @@ public class TelaPrincipalView extends javax.swing.JFrame {
         );
 
         menuFuncionario.setText("Funcionário");
+      
 
         menuManterFuncionario.setText("Manter Funcionario");
+        
         menuFuncionario.add(menuManterFuncionario);
 
         menuBuscarFuncionario.setText("Buscar Funcionario");
+        
         menuFuncionario.add(menuBuscarFuncionario);
 
         jMenuBar1.add(menuFuncionario);
 
         menuCargos.setText("Cargos");
+        
         jMenuBar1.add(menuCargos);
 
         menuSalario.setText("Salário");
 
         menuCalcularSalario.setText("Calcular Salário");
+        
         menuSalario.add(menuCalcularSalario);
 
         jMenuBar1.add(menuSalario);
 
         menuFerramentas.setText("Ferramentas");
+
+        menuLog.setText("Log");
+        menuFerramentas.add(menuLog);
+
         jMenuBar1.add(menuFerramentas);
 
         menuSair.setText("Sair");
+        
+        
         jMenuBar1.add(menuSair);
 
         setJMenuBar(jMenuBar1);
@@ -123,9 +126,6 @@ public class TelaPrincipalView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    /**
-     * @param args the command line arguments
-     */
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -136,8 +136,11 @@ public class TelaPrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenu menuCargos;
     private javax.swing.JMenu menuFerramentas;
     private javax.swing.JMenu menuFuncionario;
+    private javax.swing.JMenuItem menuLog;
     private javax.swing.JMenuItem menuManterFuncionario;
     private javax.swing.JMenu menuSair;
     private javax.swing.JMenu menuSalario;
     // End of variables declaration//GEN-END:variables
+
+   
 }

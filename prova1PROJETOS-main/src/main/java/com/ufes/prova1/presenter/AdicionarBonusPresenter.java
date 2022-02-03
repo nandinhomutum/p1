@@ -24,6 +24,8 @@ import com.ufes.prova1.dao.HistoricoSalarioDAO;
 import com.ufes.prova1.model.Funcionario;
 import com.ufes.prova1.model.HistoricoBonus;
 import com.ufes.prova1.model.HistoricoSalario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
+import com.ufes.prova1.utilidades.Notificador;
 import com.ufes.prova1.view.TelaFuncionarioBonusView;
 
 /**
@@ -55,7 +57,7 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
-
+                        gerarLog(tipoBonus);
 		}
 
 		if (view.getCkDistancia().isSelected() == true) {
@@ -67,6 +69,7 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
+                        gerarLog(tipoBonus);
 		}
 
 		if (view.getJckIdade().isSelected() == true) {
@@ -78,7 +81,8 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
-		}
+                        gerarLog(tipoBonus);
+                }
 
 		if (view.getCkFuncionarioMes().isSelected() == true) {
 
@@ -89,7 +93,8 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
-		}
+                        gerarLog(tipoBonus);
+                }
                 
                 if (view.getJckbTempo().isSelected() == true) {
 
@@ -100,7 +105,8 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
-		}
+                        gerarLog(tipoBonus);
+                }
                 
 
 		if (view.getjCBBonus().toString().equals("NORMAL")) {
@@ -113,7 +119,8 @@ public class AdicionarBonusPresenter {
 			bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
-		} else {
+                        gerarLog(tipoBonus);
+                } else {
 
 			tipoBonus = "BONUS GENEROSO";
 			valorBonus = BigDecimal.ZERO;
@@ -122,6 +129,7 @@ public class AdicionarBonusPresenter {
                         bonusAcumulado = bonusAcumulado.add(valorBonus);
 			HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 			HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
+                        gerarLog(tipoBonus);
 		}
 		BigInteger numFaltas = new BigInteger(view.getTxtFaltas().getText());
 		funcionario.setFaltas(numFaltas);
@@ -131,9 +139,10 @@ public class AdicionarBonusPresenter {
 		System.out.println("faltas: " + funcionario.getFaltas());
 		valorBonus = bonus.calcular(funcionario);
 		bonusAcumulado = bonusAcumulado.add(valorBonus);
-		System.out.println("valor bonus calculado: " + valorBonus);
+		//System.out.println("valor bonus calculado: " + valorBonus);
 		HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 		HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
+                gerarLog(tipoBonus);
 
 		BigDecimal salario = BigDecimal.ZERO;
 
@@ -141,6 +150,10 @@ public class AdicionarBonusPresenter {
 		HistoricoSalario historicoSalario = new HistoricoSalario(funcionario, bonusAcumulado, salario, mes,
 				ano);
 		HistoricoSalarioDAO.getHistoricoDAOInstance().save(historicoSalario);
+                String mensagem = "Calculado o salario do funcionario: " + funcionario.getNome();
+                //System.out.println(mensagem);
+                Notificador.getInstance().disparaInfo(mensagem);
+                 GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 	}
     
     private void criarEventListeners() {
@@ -178,5 +191,14 @@ public class AdicionarBonusPresenter {
 		new PrincipalPresenter();
 		this.view.dispose();
 	}
+        
+    private void gerarLog(String tipoBonus){
+        String mensagem = "Funcionario " + funcionario.getNome() + " recebeu o bonus " +tipoBonus;
+        //System.out.println(mensagem);
+        //Notificador.getInstance().disparaInfo(mensagem);
+       GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
+        
+    }
+            
     
 }

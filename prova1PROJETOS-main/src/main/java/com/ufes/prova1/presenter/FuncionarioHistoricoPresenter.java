@@ -16,6 +16,7 @@ import com.ufes.prova1.dao.HistoricoSalarioDAO;
 import com.ufes.prova1.model.Funcionario;
 import com.ufes.prova1.model.HistoricoBonus;
 import com.ufes.prova1.model.HistoricoSalario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 import com.ufes.prova1.view.TelaHistoricoFuncionariosView;
 
 /**
@@ -30,6 +31,8 @@ public class FuncionarioHistoricoPresenter {
     public FuncionarioHistoricoPresenter(Funcionario funcionario){
         configurarTela();
         this.funcionario = funcionario;
+        String msg = "Bônus consultado para o funcionário "+ funcionario.getNome();
+         GerenciadorDeLog.getInstance().getLogger().fine(msg);
         preencherTela(funcionario);
         PreencherTabelaBonus();
         PreencherTabelaSalario();        

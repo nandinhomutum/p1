@@ -1,0 +1,20 @@
+fev. 03, 2022 6:53:33 PM com.ufes.prova1.business.CargoBusiness cadastrarCargo
+FINE: Cargo Estagiario cadastrado com sucesso
+fev. 03, 2022 6:53:49 PM com.ufes.prova1.business.CargoBusiness cadastrarCargo
+WARNING: Cargo Estagiario  já existe!!!
+fev. 03, 2022 6:54:16 PM com.ufes.prova1.business.CargoBusiness validateDelete
+SEVERE: Cargo não pode ser deletado, há funcionários com este cargo cadastrados!!!
+fev. 03, 2022 7:15:17 PM com.ufes.prova1.presenter.FuncionarioHistoricoPresenter <init>
+FINE: Bônus consultado para o funcionárioteste6
+fev. 03, 2022 8:55:41 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario gisel recebeu o bonus BONUS 13 SALARIO
+fev. 03, 2022 8:55:42 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario gisel recebeu o bonus BONUS FUNCIONARIO MES
+fev. 03, 2022 8:55:43 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario gisel recebeu o bonus BONUS TEMPO DE SERVIÇO
+fev. 03, 2022 8:55:44 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario gisel recebeu o bonus BONUS GENEROSO
+fev. 03, 2022 8:55:44 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario gisel recebeu o bonus BONUS POR FALTA
+fev. 03, 2022 8:55:46 PM com.ufes.prova1.presenter.AdicionarBonusPresenter salvar
+FINE: Calculado o salario do funcionario: gisel

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ufes.prova1.dao.FuncionarioDAO;
 import com.ufes.prova1.model.Funcionario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 import com.ufes.prova1.utilidades.Notificador;
 
 public class FuncionarioBusiness {
@@ -41,9 +42,7 @@ public class FuncionarioBusiness {
 	}
 	
 	public void cadastrarFuncionario(String nome, BigInteger idade, BigDecimal salario, String cargo, String mes, String ano) {
-//        String bonusSelecionado = view.getCbBonus().getSelectedItem().toString();
-//        Date data = new Date();
-//        Bonus bonus = new BonusNormal();
+
 		Funcionario funcionario = new Funcionario();
 		funcionario.setNome(nome);
 		funcionario.setIdade(idade);
@@ -53,6 +52,10 @@ public class FuncionarioBusiness {
                 funcionario.setAno(ano);
 		funcionario.setFaltas(BigInteger.ZERO);
 		FuncionarioDAO.getFuncionarioDAOInstance().save(funcionario);
+                String mensagem = "Funcionario " + nome + " cadastrado com sucesso";
+                System.out.println(mensagem);
+		Notificador.getInstance().disparaInfo(mensagem);
+		GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 	}
 	
 	public void salvarFuncionario(BigInteger id, String nome, BigInteger idade, BigDecimal salario, String cargo, String mes, String ano) {
@@ -64,6 +67,10 @@ public class FuncionarioBusiness {
 		funcionario.setMes(mes);
                 funcionario.setAno(ano);
 		FuncionarioDAO.getFuncionarioDAOInstance().save(funcionario);
+                String mensagem = "Funcionario " + nome + " salvo com sucesso";
+                System.out.println(mensagem);
+		Notificador.getInstance().disparaInfo(mensagem);
+		GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 	}
 	
 	private void save(Funcionario funcionario) {
@@ -74,9 +81,13 @@ public class FuncionarioBusiness {
 	
 	public void delete(BigInteger id) {
 		FuncionarioDAO.getFuncionarioDAOInstance().delete(id);
+                
 	}
 
 	private Boolean validate(Funcionario funcionario) {
+            if(null == funcionario.getKm()) {
+			funcionario.setKm(BigInteger.ZERO);
+            }
 		if(null == funcionario.getNome() || "".equals(funcionario.getNome())) {
 			System.out.println("Nome do Funcionário não pode estar vazio");
 			Notificador.getInstance().disparaAviso("Nome do Funcionário não pode Estar com nome Vazio");
@@ -84,6 +95,7 @@ public class FuncionarioBusiness {
 		} else {
 			return Boolean.TRUE;
 		}
+                
 	}
 
 }
