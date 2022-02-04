@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.ufes.prova1.model.HistoricoBonus;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 
 /**
  *
@@ -93,13 +94,12 @@ public class HistoricoBonusDAO implements DAOInterface<HistoricoBonus>{
 		try {
 			@SuppressWarnings("unchecked")
 			List<HistoricoBonus> retorno = query.getResultList();
-			// em.close();
-			// emf.close();
+			
 			em.getTransaction().commit();
 			return retorno;
 		} catch (NoResultException nre) {
-			// em.close();
-			// emf.close();
+			String mensagem = nre.getMessage();
+			GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
 			em.getTransaction().commit();
 			;
 			return null;

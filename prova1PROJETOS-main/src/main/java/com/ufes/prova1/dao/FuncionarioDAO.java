@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 
 import com.ufes.prova1.model.Funcionario;
 import com.ufes.prova1.utilidades.GerenciadorDeLog;
+import com.ufes.prova1.utilidades.Notificador;
 
 /**
  *
@@ -58,9 +59,12 @@ public class FuncionarioDAO implements DAOInterface<Funcionario> {
 		try {
 			List<Funcionario> retorno = query.getResultList();
 			em.getTransaction().commit();
+                        
 			return retorno;
 		} catch (NoResultException nre) {
 			em.getTransaction().commit();
+                        String mensagem = nre.getMessage();
+			GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
 			return null;
 		}
 	}

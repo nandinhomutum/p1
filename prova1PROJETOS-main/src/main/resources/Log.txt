@@ -18,3 +18,17 @@ fev. 03, 2022 8:55:44 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerar
 FINE: Funcionario gisel recebeu o bonus BONUS POR FALTA
 fev. 03, 2022 8:55:46 PM com.ufes.prova1.presenter.AdicionarBonusPresenter salvar
 FINE: Calculado o salario do funcionario: gisel
+fev. 03, 2022 9:36:11 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS 13 SALARIO
+fev. 03, 2022 9:36:16 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS DISTANCIA
+fev. 03, 2022 9:36:18 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS FUNCIONARIO MES
+fev. 03, 2022 9:36:20 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS GENEROSO
+fev. 03, 2022 9:36:21 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS POR FALTA
+fev. 03, 2022 9:36:22 PM com.ufes.prova1.presenter.AdicionarBonusPresenter gerarLog
+FINE: Funcionario teste5 recebeu o bonus BONUS POR FALTA
+fev. 03, 2022 9:36:41 PM com.ufes.prova1.presenter.AdicionarBonusPresenter salvar
+FINE: Calculado o salario do funcionario: teste5

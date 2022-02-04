@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.ufes.prova1.model.Cargo;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 
 /**
  *
@@ -43,9 +44,7 @@ public class CargoDAO implements DAOInterface<Cargo> {
 
 	@Override
 	public List<Cargo> getAll() {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
+		
 		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
 		em.getTransaction().begin();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -55,15 +54,12 @@ public class CargoDAO implements DAOInterface<Cargo> {
 		TypedQuery<Cargo> allQuery = em.createQuery(all);
 		List<Cargo> retorno = allQuery.getResultList();
 		em.getTransaction().commit();
-		//em.close();
-		//emf.close();
+		
 		return retorno;
 	}
 		
 	public Cargo get(String nome) {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
+		
 		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
 		em.getTransaction().begin();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -75,13 +71,12 @@ public class CargoDAO implements DAOInterface<Cargo> {
 		try {
 			Cargo retorno = query.getSingleResult();
 			em.getTransaction().commit();
-			//em.close();
-			//emf.close();
+			
 		  return retorno;
 		} catch (NoResultException nre) {
 			em.getTransaction().commit();
-			//em.close();
-			//emf.close();
+			String mensagem = nre.getMessage();
+			GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
 			return null;
 		}
 	}
@@ -89,37 +84,29 @@ public class CargoDAO implements DAOInterface<Cargo> {
 
 	@Override
 	public Cargo get(BigInteger id) {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
+		
 		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
 		em.getTransaction().begin();
 		Cargo retorno = em.find(Cargo.class, id);
 		em.getTransaction().commit();
-		//em.close();
-		//emf.close();
+		
 		return retorno;
 	}
 
 	@Override
 	public void save(Cargo cargo) {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
+		
 		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
 		em.getTransaction().begin();
 		em.merge(cargo);
 		em.getTransaction().commit();
-		//em.close();
-		//emf.close();
+		
 	}
 
 	@Override
 	public void delete(BigInteger id) {
-		// @SuppressWarnings("static-access")
-		// EntityManagerFactory emf = new
-		// Persistence().createEntityManagerFactory("persistenceUnit");
-		EntityManager em = Conexao.getInstance().abreTransacao();// emf.createEntityManager();
+		
+		EntityManager em = Conexao.getInstance().abreTransacao();
 		em.getTransaction().begin();
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaDelete<Cargo> query = criteriaBuilder.createCriteriaDelete(Cargo.class);
@@ -127,7 +114,6 @@ public class CargoDAO implements DAOInterface<Cargo> {
 		query.where(root.get("id").in(Arrays.asList(id)));
 		em.createQuery(query).executeUpdate();
 		em.getTransaction().commit();
-		//em.close();
-		//emf.close();
+		
 	}
 }

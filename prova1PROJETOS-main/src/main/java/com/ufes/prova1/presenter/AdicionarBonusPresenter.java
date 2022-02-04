@@ -139,7 +139,7 @@ public class AdicionarBonusPresenter {
 		System.out.println("faltas: " + funcionario.getFaltas());
 		valorBonus = bonus.calcular(funcionario);
 		bonusAcumulado = bonusAcumulado.add(valorBonus);
-		//System.out.println("valor bonus calculado: " + valorBonus);
+                gerarLog(tipoBonus);
 		HistoricoBonus historico = new HistoricoBonus(funcionario.getNome(), tipoBonus, valorBonus, mes, ano);
 		HistoricoBonusDAO.getHistoricoDAOInstance().save(historico);
                 gerarLog(tipoBonus);
@@ -151,7 +151,6 @@ public class AdicionarBonusPresenter {
 				ano);
 		HistoricoSalarioDAO.getHistoricoDAOInstance().save(historicoSalario);
                 String mensagem = "Calculado o salario do funcionario: " + funcionario.getNome();
-                //System.out.println(mensagem);
                 Notificador.getInstance().disparaInfo(mensagem);
                  GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 	}
@@ -194,8 +193,6 @@ public class AdicionarBonusPresenter {
         
     private void gerarLog(String tipoBonus){
         String mensagem = "Funcionario " + funcionario.getNome() + " recebeu o bonus " +tipoBonus;
-        //System.out.println(mensagem);
-        //Notificador.getInstance().disparaInfo(mensagem);
        GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
         
     }

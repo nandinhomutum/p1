@@ -67,6 +67,8 @@ public class TelaCalcularSalarioView extends javax.swing.JFrame {
         btnCalculo = new javax.swing.JButton();
         jcbMes = new javax.swing.JComboBox<>();
         jcbAno = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,9 +92,13 @@ public class TelaCalcularSalarioView extends javax.swing.JFrame {
 
         btnCalculo.setText("Calculo");
 
-        jcbMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
+        jcbMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
 
         jcbAno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2022", "2023", "2024", "2025", "2028" }));
+
+        jLabel2.setText("Mês");
+
+        jLabel3.setText("Ano");
 
         jDesktopPane1.setLayer(btnBuscar, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(btnListarTodos, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -103,6 +109,8 @@ public class TelaCalcularSalarioView extends javax.swing.JFrame {
         jDesktopPane1.setLayer(btnCalculo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jcbMes, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jcbAno, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -131,12 +139,20 @@ public class TelaCalcularSalarioView extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnCalculo)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(4, 4, 4)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar)
                     .addComponent(btnListarTodos)
@@ -257,6 +273,8 @@ public class TelaCalcularSalarioView extends javax.swing.JFrame {
     private javax.swing.JButton btnListarTodos;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> jcbAno;
     private javax.swing.JComboBox<String> jcbMes;

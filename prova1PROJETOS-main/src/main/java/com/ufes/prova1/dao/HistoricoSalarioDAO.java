@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.ufes.prova1.model.HistoricoSalario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
 
 /**
  *
@@ -98,8 +99,8 @@ private static HistoricoSalarioDAO INSTANCE;
 			em.getTransaction().commit();
 			return retorno;
 		} catch (NoResultException nre) {
-			// em.close();
-			// emf.close();
+			String mensagem = nre.getMessage();
+			GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
 			em.getTransaction().commit();
 			;
 			return null;
@@ -122,8 +123,8 @@ private static HistoricoSalarioDAO INSTANCE;
 			em.getTransaction().commit();
 			return retorno;
 		} catch (NoResultException nre) {
-			// em.close();
-			// emf.close();
+			String mensagem = nre.getMessage();
+			GerenciadorDeLog.getInstance().getLogger().severe(mensagem);
 			em.getTransaction().commit();
 			;
 			return null;

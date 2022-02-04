@@ -18,6 +18,8 @@ import com.ufes.prova1.dao.FuncionarioDAO;
 import com.ufes.prova1.dao.HistoricoSalarioDAO;
 import com.ufes.prova1.model.Funcionario;
 import com.ufes.prova1.model.HistoricoSalario;
+import com.ufes.prova1.utilidades.GerenciadorDeLog;
+import com.ufes.prova1.utilidades.Notificador;
 import com.ufes.prova1.view.TelaCalcularSalarioView;
 
 /**
@@ -69,16 +71,16 @@ public class SalarioPresenter {
 		view.getBtnListarTodos().addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent ae) {
-				try {
-					preencherTabelaSalario();
-				} catch (SQLException ex) {
-					Logger.getLogger(SalarioPresenter.class.getName()).log(Level.SEVERE, null, ex);
-				}
+				
+			preencherTabelaSalario();
+                        String mensagem = "Buscado todos os salarios registrados";
+                        Notificador.getInstance().disparaInfo(mensagem);
+                 GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
 			}
 		});
 	}
     
-	private void preencherTabelaSalario() throws SQLException {
+	private void preencherTabelaSalario() {
       DefaultTableModel tabela1 = new DefaultTableModel();
       tabela1.addColumn("FUNCIONARIO");
       tabela1.addColumn("SALARIO BASE");
@@ -134,6 +136,9 @@ public class SalarioPresenter {
     	String mes = view.getJcbMes().getSelectedItem().toString();
         String ano = view.getJcbAno().getSelectedItem().toString();
         preencherTabelaSalarioMes(mes, ano);
+        String mensagem = "Buscado todos os salarios de : "+ mes + "  " + ano;
+        Notificador.getInstance().disparaInfo(mensagem);
+        GerenciadorDeLog.getInstance().getLogger().fine(mensagem);
     }
     
 	public void sair() {
